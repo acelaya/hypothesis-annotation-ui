@@ -50,12 +50,9 @@ import {
   toggleSpanStyle,
 } from '../util/markdown-commands';
 import { getCaretCoordinates } from '../util/textarea-caret-position';
+import { isMacOS } from '../util/user-agent';
 import MarkdownView from './MarkdownView';
 import MentionSuggestionsPopover from './MentionSuggestionsPopover';
-
-const isMacOS = (_userAgent: string = window.navigator.userAgent) => {
-  return _userAgent.indexOf('Mac OS') >= 0;
-};
 
 /**
  * Toolbar commands that modify the editor state. This excludes the Help link

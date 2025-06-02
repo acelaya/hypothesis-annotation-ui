@@ -1,6 +1,6 @@
 import { CardActions, Spinner } from '@hypothesis/frontend-shared';
 import classnames from 'classnames';
-import { useMemo, useState } from 'preact/hooks';
+import { useCallback, useMemo, useState } from 'preact/hooks';
 
 import { useAnnotationContext } from '../helpers/AnnotationContext';
 import {
@@ -11,6 +11,7 @@ import {
   shape,
 } from '../helpers/annotation-metadata';
 import type { Annotation, Draft } from '../helpers/types';
+import AnnotationActionBar from './AnnotationActionBar';
 import AnnotationBody from './AnnotationBody';
 import AnnotationEditor from './AnnotationEditor';
 import AnnotationHeader from './AnnotationHeader';
@@ -43,16 +44,26 @@ export type AnnotationProps = {
   annotation: Annotation;
 };
 
-export default function Annotation({ annotation }: AnnotationProps) {
-  const { authorName, isHighlighted, isOrphan, isHovered, isSaving, events } =
-    useAnnotationContext();
-  const [draft, setDraft] = useState<Draft>({
+function draftFromAnnotation(annotation: Annotation): Draft {
+  return {
     annotation,
     text: annotation.text,
     description: annotation.target[0]?.description,
     tags: annotation.tags,
     isPrivate: !isPublic(annotation),
-  });
+  };
+}
+
+export default function Annotation({ annotation }: AnnotationProps) {
+  const { authorName, isHighlighted, isOrphan, isHovered, isSaving, events } =
+    useAnnotationContext();
+  const [draft, setDraft] = useState<Draft>(() =>
+    draftFromAnnotation(annotation),
+  );
+  const resetDraft = useCallback(
+    () => setDraft(draftFromAnnotation(annotation)),
+    [annotation],
+  );
 
   const isEditing = !isSaving && !!events?.onSave;
   const showActions = !isSaving && !isEditing && isSaved(annotation);
@@ -96,10 +107,10 @@ export default function Annotation({ annotation }: AnnotationProps) {
         {isSaving && <SavingMessage />}
         {showActions && (
           <CardActions classes="grow">
-            {/*<AnnotationActionBar*/}
-            {/*  annotation={annotation}*/}
-            {/*  onReply={events?.onReply}*/}
-            {/*/>*/}
+            <AnnotationActionBar
+              annotation={annotation}
+              onStartEdit={resetDraft}
+            />
           </CardActions>
         )}
       </footer>

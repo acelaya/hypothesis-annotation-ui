@@ -1,9 +1,10 @@
 import { Card, CardContent } from '@hypothesis/frontend-shared';
 import classnames from 'classnames';
 
+import type {
+  AnnotationContextType} from '../helpers/AnnotationContext';
 import {
-  AnnotationContext,
-  AnnotationContextType,
+  AnnotationContext
 } from '../helpers/AnnotationContext';
 import type { Annotation as AnnotationType } from '../helpers/types';
 import Annotation from './Annotation';

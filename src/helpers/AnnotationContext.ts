@@ -14,6 +14,9 @@ export type AnnotationContextType = {
     imageDescriptions: boolean;
   };
 
+  flaggingEnabled?: boolean;
+  sharingEnabled?: boolean;
+
   mentionMode: MentionMode;
   usersForMentions: UsersForMentions;
 
@@ -37,11 +40,16 @@ export type AnnotationContextType = {
     /** Invoked when cancelling the annotation edition */
     onCancel?: () => void;
 
+    onStartEdit?: () => void;
     onReply?: () => void;
+    onFlag?: () => void;
+    onDelete?: () => void;
 
     onAddTag?: (newTag: string) => void;
     onRemoveTag?: (tag: string) => boolean;
     onSetPrivate?: (isPrivate: boolean) => boolean;
+
+    onCopyShareLink?: (options: { successfullyCopied: boolean }) => void;
   };
 };
 

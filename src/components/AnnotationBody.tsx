@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { useState } from 'preact/hooks';
 
 import { useAnnotationContext } from '../helpers/AnnotationContext';
-import { Annotation } from '../helpers/types';
+import type { Annotation } from '../helpers/types';
 import Excerpt from './Excerpt';
 import MarkdownView from './MarkdownView';
 import TagList from './TagList';
