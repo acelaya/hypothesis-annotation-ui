@@ -5,11 +5,11 @@ import { useCallback, useMemo, useState } from 'preact/hooks';
 import { useAnnotationContext } from '../helpers/AnnotationContext';
 import {
   annotationRole,
-  isPublic,
   isSaved,
   quote,
   shape,
 } from '../helpers/annotation-metadata';
+import { isPrivate } from '../helpers/permissions';
 import type { Annotation, Draft } from '../helpers/types';
 import AnnotationActionBar from './AnnotationActionBar';
 import AnnotationBody from './AnnotationBody';
@@ -50,7 +50,7 @@ function draftFromAnnotation(annotation: Annotation): Draft {
     text: annotation.text,
     description: annotation.target[0]?.description,
     tags: annotation.tags,
-    isPrivate: !isPublic(annotation),
+    isPrivate: isPrivate(annotation.permissions),
   };
 }
 

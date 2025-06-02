@@ -11,8 +11,8 @@ import classnames from 'classnames';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { useAnnotationContext } from '../helpers/AnnotationContext';
-import { isPublic } from '../helpers/annotation-metadata';
 import { isShareableURI } from '../helpers/annotation-sharing';
+import { isPrivate } from '../helpers/permissions';
 import type { Annotation } from '../helpers/types';
 import { copyPlainText } from '../util/copy-to-clipboard';
 import { isIOS } from '../util/user-agent';
@@ -44,7 +44,7 @@ export default function AnnotationShareControl({
 }: AnnotationShareControlProps) {
   const { group, events } = useAnnotationContext();
 
-  const annotationIsPrivate = !isPublic(annotation);
+  const annotationIsPrivate = isPrivate(annotation.permissions);
   const inContextAvailable = isShareableURI(annotation.uri);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const shareRef = useRef<HTMLDivElement | null>(null);

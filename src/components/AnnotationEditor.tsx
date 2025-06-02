@@ -6,6 +6,7 @@ import { parseAccountID } from '../helpers/account-id';
 import { isReply, shape } from '../helpers/annotation-metadata';
 import type { UserItem } from '../helpers/mention-suggestions';
 import { wrapDisplayNameMentions, wrapMentions } from '../helpers/mentions';
+import { privatePermissions, sharedPermissions } from '../helpers/permissions';
 import type { Annotation, Draft } from '../helpers/types';
 import AnnotationLicense from './AnnotationLicense';
 import AnnotationPublishControl from './AnnotationPublishControl';
@@ -159,18 +160,11 @@ export default function AnnotationEditor({
     }
 
     const userid = annotation.user;
-    const privatePermissions = {
-      read: [userid],
-      update: [userid],
-      delete: [userid],
-    };
     const changes: Partial<Annotation> = {
       tags: draft.tags,
       permissions: draft.isPrivate
-        ? privatePermissions
-        : Object.assign(privatePermissions, {
-            read: [`group:${annotation.group}`],
-          }),
+        ? privatePermissions(userid)
+        : sharedPermissions(userid, annotation.group),
     };
 
     if (!features.atMentions) {
