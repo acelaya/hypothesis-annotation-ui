@@ -17,7 +17,7 @@ export default function AnnotationHeader({
   annotation,
 }: AnnotationHeaderProps) {
   const config = useAnnotationContext();
-  const group = config?.context.group;
+  const group = config?.group;
   const displayName = annotation.user_info?.display_name;
   const authorName =
     config?.features.displayNamesEnabled && displayName

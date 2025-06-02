@@ -3,7 +3,7 @@
     "allowJs": true,
     "checkJs": true,
     "esModuleInterop": true,
-    "lib": ["es2018", "dom", "dom.iterable"],
+    "lib": ["es2021", "dom", "dom.iterable"],
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
     "module": "commonjs",

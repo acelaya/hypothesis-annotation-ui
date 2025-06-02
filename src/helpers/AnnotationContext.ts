@@ -1,8 +1,9 @@
 import { createContext } from 'preact';
 import { useContext } from 'preact/hooks';
 
-import { MentionMode } from './mentions';
-import { Annotation, Draft, Group } from './types';
+import type { UsersForMentions } from './mention-suggestions';
+import type { MentionMode } from './mentions';
+import type { Annotation, Group } from './types';
 
 export type AnnotationContextType = {
   /** Features affect how some pieces of UI look and behave */
@@ -10,15 +11,16 @@ export type AnnotationContextType = {
     atMentions: boolean;
     displayNamesEnabled: boolean;
     groupModeration: boolean;
+    imageDescriptions: boolean;
   };
 
-  /**
-   * Represents contextual information for the annotation, like extended
-   * information of the group it belongs to, if any.
-   */
-  group: Group | null;
   mentionMode: MentionMode;
+  usersForMentions: UsersForMentions;
 
+  tagSuggestions: string[];
+
+  group: Group | null;
+  authorName: string;
   isReply: boolean;
   isHighlighted: boolean;
   isOrphan: boolean;
@@ -35,13 +37,11 @@ export type AnnotationContextType = {
     /** Invoked when cancelling the annotation edition */
     onCancel?: () => void;
 
-    onSetPrivate?: (isPrivate: boolean) => void;
-    onEditDescription?: (description: string) => void;
+    onReply?: () => void;
 
     onAddTag?: (newTag: string) => void;
-
-    /** Invoked when a tag is removed */
     onRemoveTag?: (tag: string) => boolean;
+    onSetPrivate?: (isPrivate: boolean) => boolean;
   };
 };
 

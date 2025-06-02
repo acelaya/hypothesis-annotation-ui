@@ -1,3 +1,5 @@
+import { CardActions, Spinner } from '@hypothesis/frontend-shared';
+import classnames from 'classnames';
 import { useMemo, useState } from 'preact/hooks';
 
 import { useAnnotationContext } from '../helpers/AnnotationContext';
@@ -14,12 +16,35 @@ import AnnotationEditor from './AnnotationEditor';
 import AnnotationHeader from './AnnotationHeader';
 import AnnotationQuote from './AnnotationQuote';
 
+function SavingMessage() {
+  return (
+    <div
+      className={classnames(
+        'flex grow justify-end items-center gap-x-1',
+        // Make sure height matches that of action-bar icons so that there
+        // isn't a height change when transitioning in and out of saving state
+        'h-8 touch:h-touch-minimum',
+      )}
+      data-testid="saving-message"
+    >
+      <span
+        // Slowly fade in the Spinner such that it only shows up if the saving
+        // is slow
+        className="text-[16px] animate-fade-in-slow"
+      >
+        <Spinner size="sm" />
+      </span>
+      <div className="text-color-text-light font-medium">Saving...</div>
+    </div>
+  );
+}
+
 export type AnnotationProps = {
   annotation: Annotation;
 };
 
 export default function Annotation({ annotation }: AnnotationProps) {
-  const { authorName, isHighlighted, isOrphan, isHovered, isSaving } =
+  const { authorName, isHighlighted, isOrphan, isHovered, isSaving, events } =
     useAnnotationContext();
   const [draft, setDraft] = useState<Draft>({
     annotation,
@@ -29,7 +54,9 @@ export default function Annotation({ annotation }: AnnotationProps) {
     isPrivate: !isPublic(annotation),
   });
 
-  const isEditing = !!draft && !isSaving;
+  const isEditing = !isSaving && !!events?.onSave;
+  const showActions = !isSaving && !isEditing && isSaved(annotation);
+
   const annotationQuote = quote(annotation);
   const targetShape = useMemo(() => shape(annotation), [annotation]);
 
@@ -56,7 +83,26 @@ export default function Annotation({ annotation }: AnnotationProps) {
       )}
 
       {!isEditing && <AnnotationBody annotation={annotation} />}
-      {isEditing && <AnnotationEditor annotation={annotation} draft={draft} />}
+
+      {isEditing && (
+        <AnnotationEditor
+          annotation={annotation}
+          draft={draft}
+          onChangeDraft={setDraft}
+        />
+      )}
+
+      <footer className="flex items-center">
+        {isSaving && <SavingMessage />}
+        {showActions && (
+          <CardActions classes="grow">
+            {/*<AnnotationActionBar*/}
+            {/*  annotation={annotation}*/}
+            {/*  onReply={events?.onReply}*/}
+            {/*/>*/}
+          </CardActions>
+        )}
+      </footer>
     </div>
   );
 }
